@@ -5,21 +5,20 @@
     <title>Ping</title>
 </head>
 <body>
-    <p id="ping">Ping: </p>
+    <p id="ping">Ping: —</p>
 
     <script>
         const p = document.getElementById('ping');
-        const url = 'https://www.gstatic.com/generate_204?t=' + Date.now();
+        const url = 'https://www.gstatic.com/generate_204?t=' + performance.now();
 
         const start = performance.now();
+        const img = new Image();
 
-        fetch(url, { method: 'HEAD', cache: 'no-store' })
-            .then(() => {
-                p.textContent = `Ping: ${Math.round(performance.now() - start)} ms`;
-            })
-            .catch(() => {
-                p.textContent = 'Ping: ошибка';
-            });
+        img.onload = img.onerror = () => {
+            p.textContent = `Ping: ${Math.round(performance.now() - start)} ms`;
+        };
+
+        img.src = url;
     </script>
 </body>
 </html>

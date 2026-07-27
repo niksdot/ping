@@ -5,18 +5,16 @@
     <title>Ping</title>
 </head>
 <body>
-    <p id="ping">Ping: —</p>
+    <p id="ping"></p>
 
     <script>
         const p = document.getElementById('ping');
         const url = 'https://www.gstatic.com/generate_204?t=' + performance.now();
-
         const start = performance.now();
         const img = new Image();
 
         img.onload = img.onerror = () => {
-            p.textContent = `Ping: ${Math.round(performance.now() - start)} ms
-            Source: https://www.gstatic.com/generate_204`;
+            p.textContent = `Ping: ${Math.round(performance.now() - start)} ms`;
         };
 
         img.src = url;

@@ -5,19 +5,37 @@
     <title>Ping</title>
 </head>
 <body>
-    <p id="ping"></p>
+    <p id="ping">Doing...</p>
 
     <script>
         const p = document.getElementById('ping');
-        const url = 'https://www.gstatic.com/generate_204?t=' + performance.now();
-        const start = performance.now();
-        const img = new Image();
+        const REQUESTS = 5;
 
-        img.onload = img.onerror = () => {
-            p.textContent = `Ping: ${Math.round(performance.now() - start)} ms`;
-        };
+        function measurePing() {
+            return new Promise(resolve => {
+                const start = performance.now();
+                const img = new Image();
 
-        img.src = url;
+                img.onload = img.onerror = () => {
+                    resolve(performance.now() - start);
+                };
+
+                img.src = `https://www.gstatic.com/generate_204?t=${performance.now()}&r=${Math.random()}`;
+            });
+        }
+
+        (async () => {
+            const times = await Promise.all(
+                Array.from({ length: REQUESTS }, () => measurePing())
+            );
+
+            const average = times.reduce((sum, time) => sum + time, 0) / REQUESTS;
+
+            p.textContent = `Ping: ${Math.round(average)} ms`;
+            console.log(
+                `Pings: ${times.map(t => Math.round(t)).join(', ')} ms`
+            );
+        })();
     </script>
 </body>
 </html>
